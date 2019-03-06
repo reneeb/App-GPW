@@ -1,0 +1,16 @@
+#!/usr/bin/perl
+
+# ABSTRACT: script to all the GPW stuff
+
+use strict;
+use warnings;
+
+use FindBin;
+BEGIN { unshift @INC, "$FindBin::Bin/../lib" }
+
+use Mojolicious::Commands;
+my $app = Mojolicious::Commands->start_app('App::GPW');
+
+Mojo::IOLoop->start if !Mojo::IOLoop->is_running;
+
+$app;

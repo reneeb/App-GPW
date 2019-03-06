@@ -1,0 +1,26 @@
+#!/usr/bin/perl
+
+# ABSTRACT: script to all the GPW stuff
+
+use Mojolicious::Lite;
+
+app->plugin( JSONConfig => {
+    file => $ENV{GPW_JSON_CONFIG} // app->home->child('..', 'conf', 'gpw.json'),
+});
+
+app->plugins->namespaces(['App::GPW::Plugin']);
+app->commands->namespaces(['App::GPW::Cmd']);
+
+app->plugin( 'Utils' );
+
+my $r = app->routes;
+$r->get('/')->to( 'conf#list' )->name('conf-list');
+$r->post('/new-conf')->to('conf#add')->name('conf-new');
+$r->get('/conf/:year')->to('conf#detail')->name('conf-detail');
+$r->get('/conf/:year/:talk-id')->to('conf#talk')->name('conf-talk');
+
+my $app = app->start;
+
+Mojo::IOLoop->start if !Mojo::IOLoop->is_running;
+
+my $gpw = $app;
